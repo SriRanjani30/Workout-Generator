@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Workout Plan Generator</title>
+    <title> Workout Plan Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 125vh;
             margin: 0;
         }
         .container {
@@ -19,7 +19,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 600px;
         }
         h1 {
             font-size: 24px;
@@ -46,6 +46,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #218838;
@@ -69,12 +70,28 @@
             font-size: 14px;
             color: #666;
         }
+        .profile, .calories {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .calories input {
+            width: 50px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Advanced Workout Plan Generator</h1>
         <form id="workout-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
             <label for="goal">Select Your Fitness Goal:</label>
             <select id="goal" name="goal" required>
                 <option value="">--Please choose an option--</option>
@@ -91,4 +108,155 @@
                 <option value="intermediate">Intermediate</option>
                 <option value="advanced">Advanced</option>
             </select>
+
+            <label for="days">How many days per week can you work out?</label>
+            <input type="number" id="days" name="days" min="1" max="7" required>
+
+            <button type="submit">Generate Plan</button>
+        </form>
+
+        <div id="plan" class="hidden">
+            <h2>Your Workout Plan</h2>
+            <ul id="workout-list"></ul>
+        </div>
+
+        <div id="motivational-quote" class="quote hidden"></div>
+        
+        <div class="profile hidden">
+            <h3>Profile</h3>
+            <p id="profile-name"></p>
+            <p id="profile-age"></p>
+            <button id="save-profile">Save Profile</button>
+        </div>
+
+        <div class="calories hidden">
+            <h3>Calorie Tracker</h3>
+            <label for="calories">Enter Calories Burned Today:</label>
+            <input type="number" id="calories" name="calories">
+            <button id="add-calories">Add</button>
+            <p>Total Calories Burned: <span id="total-calories">0</span></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('workout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const goal = document.getElementById('goal').value;
+            const experience = document.getElementById('experience').value;
+            const days = document.getElementById('days').value;
+            const plan = document.getElementById('plan');
+            const workoutList = document.getElementById('workout-list');
+            const quote = document.getElementById('motivational-quote');
+            const profileName = document.getElementById('profile-name');
+            const profileAge = document.getElementById('profile-age');
+            const profileSection = document.querySelector('.profile');
+            const caloriesSection = document.querySelector('.calories');
+            
+            let workouts = [];
+            let descriptions = {};
+            let motivationalQuotes = [
+                "Push yourself because no one else is going to do it for you.",
+                "Success starts with self-discipline.",
+                "No pain, no gain. Shut up and train.",
+                "Don't limit your challenges. Challenge your limits."
+            ];
+
+            switch (goal) {
+                case 'weight_loss':
+                    workouts = ['Cardio', 'HIIT', 'Circuit Training'];
+                    descriptions = {
+                        'Cardio': 'A high-energy workout to burn calories.',
+                        'HIIT': 'High-Intensity Interval Training for quick fat loss.',
+                        'Circuit Training': 'Combines strength and cardio for maximum effect.'
+                    };
+                    break;
+                case 'muscle_gain':
+                    workouts = ['Weight Lifting', 'Bodybuilding', 'Strength Training'];
+                    descriptions = {
+                        'Weight Lifting': 'Lift weights to build muscle mass.',
+                        'Bodybuilding': 'Focus on specific muscle groups for growth.',
+                        'Strength Training': 'Increase your strength with compound movements.'
+                    };
+                    break;
+                case 'endurance':
+                    workouts = ['Running', 'Cycling', 'Swimming'];
+                    descriptions = {
+                        'Running': 'Build endurance with long-distance running.',
+                        'Cycling': 'Improve cardiovascular health with cycling.',
+                        'Swimming': 'A full-body workout to enhance endurance.'
+                    };
+                    break;
+                case 'flexibility':
+                    workouts = ['Yoga', 'Pilates', 'Stretching'];
+                    descriptions = {
+                        'Yoga': 'Improve flexibility and reduce stress.',
+                        'Pilates': 'Strengthen your core and improve posture.',
+                        'Stretching': 'Enhance your range of motion with stretching exercises.'
+                    };
+                    break;
+                default:
+                    workouts = [];
+            }
+
+            if (experience === 'beginner') {
+                workouts = workouts.slice(0, 2); // Limit to 2 types for beginners
+            } else if (experience === 'intermediate') {
+                workouts = workouts.slice(0, 3); // Limit to 3 types for intermediates
+            }
+
+            workoutList.innerHTML = '';
+            for (let i = 0; i < days; i++) {
+                const workout = workouts[i % workouts.length];
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>Day ${i + 1}: ${workout}</strong><div class="description">${descriptions[workout]}</div>`;
+                workoutList.appendChild(listItem);
+            }
+            
+            plan.classList.remove('hidden');
+            quote.textContent = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+            quote.classList.remove('hidden');
+            
+            profileName.textContent = `Name: ${name}`;
+            profileAge.textContent = `Age: ${age}`;
+            profileSection.classList.remove('hidden');
+            caloriesSection.classList.remove('hidden');
+        });
+
+        document.getElementById('save-profile').addEventListener('click', function() {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            localStorage.setItem('profileName', name);
+            localStorage.setItem('profileAge', age);
+            alert('Profile saved successfully!');
+        });
+
+        document.getElementById('add-calories').addEventListener('click', function() {
+            const calories = parseInt(document.getElementById('calories').value);
+            let totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
+            totalCalories += calories;
+            localStorage.setItem('totalCalories', totalCalories);
+            document.getElementById('total-calories').textContent = totalCalories;
+        });
+
+        window.addEventListener('load', function() {
+            const name = localStorage.getItem('profileName');
+            const age = localStorage.getItem('profileAge');
+            const totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
+
+            if (name && age) {
+                document.getElementById('name').value = name;
+                document.getElementById('age').value = age;
+                document.getElementById('profile-name').textContent = `Name: ${name}`;
+                document.getElementById('profile-age').textContent = `Age: ${age}`;
+                document.querySelector('.profile').classList.remove('hidden');
+                document.querySelector('.calories').classList.remove('hidden');
+            }
+
+            document.getElementById('total-calories').textContent = totalCalories;
+        });
+    </script>
+</body>
+</html>

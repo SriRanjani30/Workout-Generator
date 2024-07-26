@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Workout Plan Generator</title>
+    <title>Advanced Workout Plan Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 125vh;
+            height: 150vh;
             margin: 0;
         }
         .container {
@@ -21,8 +21,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 600px;
         }
-        h1 {
-            font-size: 24px;
+        h1, h2 {
             text-align: center;
         }
         form {
@@ -51,10 +50,7 @@
         button:hover {
             background-color: #218838;
         }
-        #plan {
-            margin-top: 20px;
-        }
-        #plan.hidden {
+        .hidden {
             display: none;
         }
         #workout-list {
@@ -70,7 +66,7 @@
             font-size: 14px;
             color: #666;
         }
-        .profile, .calories {
+        .profile, .calories, .progress, .login, .register {
             margin-top: 20px;
             padding: 10px;
             background-color: #f9f9f9;
@@ -80,80 +76,192 @@
             width: 50px;
             text-align: center;
         }
+        .progress-chart {
+            width: 100%;
+            height: 0px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Advanced Workout Plan Generator</h1>
-        <form id="workout-form">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-
-            <label for="age">Age:</label>
-            <input type="number" id="age" name="age" required>
-
-            <label for="goal">Select Your Fitness Goal:</label>
-            <select id="goal" name="goal" required>
-                <option value="">--Please choose an option--</option>
-                <option value="weight_loss">Weight Loss</option>
-                <option value="muscle_gain">Muscle Gain</option>
-                <option value="endurance">Endurance</option>
-                <option value="flexibility">Flexibility</option>
-            </select>
-
-            <label for="experience">Select Your Experience Level:</label>
-            <select id="experience" name="experience" required>
-                <option value="">--Please choose an option--</option>
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-            </select>
-
-            <label for="days">How many days per week can you work out?</label>
-            <input type="number" id="days" name="days" min="1" max="7" required>
-
-            <button type="submit">Generate Plan</button>
-        </form>
-
-        <div id="plan" class="hidden">
-            <h2>Your Workout Plan</h2>
-            <ul id="workout-list"></ul>
+        <div class="login">
+            <h1>Login</h1>
+            <form id="login-form">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" name="email" required>
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
         </div>
 
-        <div id="motivational-quote" class="quote hidden"></div>
-        
+        <div class="register hidden">
+            <h1>Register</h1>
+            <form id="register-form">
+                <label for="register-email">Email:</label>
+                <input type="email" id="register-email" name="email" required>
+                <label for="register-password">Password:</label>
+                <input type="password" id="register-password" name="password" required>
+                <label for="register-name">Name:</label>
+                <input type="text" id="register-name" name="name" required>
+                <label for="register-age">Age:</label>
+                <input type="number" id="register-age" name="age" required>
+                <button type="submit">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="show-login">Login here</a></p>
+        </div>
+
         <div class="profile hidden">
-            <h3>Profile</h3>
-            <p id="profile-name"></p>
-            <p id="profile-age"></p>
-            <button id="save-profile">Save Profile</button>
-        </div>
+            <h1>Welcome, <span id="profile-name"></span></h1>
+            <p>Age: <span id="profile-age"></span></p>
+            <button id="logout">Logout</button>
+            <form id="workout-form">
+                <h2>Create Your Workout Plan</h2>
+                <label for="goal">Select Your Fitness Goal:</label>
+                <select id="goal" name="goal" required>
+                    <option value="">--Please choose an option--</option>
+                    <option value="weight_loss">Weight Loss</option>
+                    <option value="muscle_gain">Muscle Gain</option>
+                    <option value="endurance">Endurance</option>
+                    <option value="flexibility">Flexibility</option>
+                </select>
 
-        <div class="calories hidden">
-            <h3>Calorie Tracker</h3>
-            <label for="calories">Enter Calories Burned Today:</label>
-            <input type="number" id="calories" name="calories">
-            <button id="add-calories">Add</button>
-            <p>Total Calories Burned: <span id="total-calories">0</span></p>
+                <label for="experience">Select Your Experience Level:</label>
+                <select id="experience" name="experience" required>
+                    <option value="">--Please choose an option--</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+
+                <label for="days">How many days per week can you work out?</label>
+                <input type="number" id="days" name="days" min="1" max="7" required>
+
+                <button type="submit">Generate Plan</button>
+            </form>
+
+            <div id="plan" class="hidden">
+                <h2>Your Workout Plan</h2>
+                <ul id="workout-list"></ul>
+            </div>
+            
+            <div id="motivational-quote" class="quote hidden"></div>
+
+            <div class="calories hidden">
+                <h3>Calorie Tracker</h3>
+                <label for="calories">Enter Calories Burned Today:</label>
+                <input type="number" id="calories" name="calories">
+                <button id="add-calories">Add</button>
+                <p>Total Calories Burned: <span id="total-calories">0</span></p>
+            </div>
+
+            <div class="progress hidden">
+                <h3>Progress</h3>
+                <div id="progress-chart" class="progress-chart"></div>
+            </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.getElementById('workout-form').addEventListener('submit', function(e) {
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const workoutForm = document.getElementById('workout-form');
+        const profileSection = document.querySelector('.profile');
+        const loginSection = document.querySelector('.login');
+        const registerSection = document.querySelector('.register');
+        const plan = document.getElementById('plan');
+        const workoutList = document.getElementById('workout-list');
+        const quote = document.getElementById('motivational-quote');
+        const profileName = document.getElementById('profile-name');
+        const profileAge = document.getElementById('profile-age');
+        const caloriesSection = document.querySelector('.calories');
+        const progressSection = document.querySelector('.progress');
+        const showRegisterLink = document.getElementById('show-register');
+        const showLoginLink = document.getElementById('show-login');
+        const logoutButton = document.getElementById('logout');
+        const caloriesInput = document.getElementById('calories');
+        const addCaloriesButton = document.getElementById('add-calories');
+        const totalCaloriesElement = document.getElementById('total-calories');
+
+        let userProfile = JSON.parse(localStorage.getItem('userProfile')) || null;
+        let totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
+
+        function displayProfile() {
+            profileName.textContent = userProfile.name;
+            profileAge.textContent = userProfile.age;
+            profileSection.classList.remove('hidden');
+            loginSection.classList.add('hidden');
+            registerSection.classList.add('hidden');
+            caloriesSection.classList.remove('hidden');
+            progressSection.classList.remove('hidden');
+        }
+
+        function updateCalories() {
+            totalCaloriesElement.textContent = totalCalories;
+        }
+
+        if (userProfile) {
+            displayProfile();
+            updateCalories();
+        }
+
+        showRegisterLink.addEventListener('click', () => {
+            loginSection.classList.add('hidden');
+            registerSection.classList.remove('hidden');
+        });
+
+        showLoginLink.addEventListener('click', () => {
+            registerSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = loginForm.email.value;
+            const password = loginForm.password.value;
+
+            if (email === 'test@example.com' && password === 'password') {
+                userProfile = {
+                    email: email,
+                    name: 'John Doe',
+                    age: 30
+                };
+                localStorage.setItem('userProfile', JSON.stringify(userProfile));
+                displayProfile();
+            } else {
+                alert('Invalid credentials');
+            }
+        });
+
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            userProfile = {
+                email: registerForm.email.value,
+                password: registerForm.password.value,
+                name: registerForm.name.value,
+                age: registerForm.age.value
+            };
+            localStorage.setItem('userProfile', JSON.stringify(userProfile));
+            displayProfile();
+        });
+
+        logoutButton.addEventListener('click', () => {
+            userProfile = null;
+            localStorage.removeItem('userProfile');
+            loginSection.classList.remove('hidden');
+            profileSection.classList.add('hidden');
+            caloriesSection.classList.add('hidden');
+            progressSection.classList.add('hidden');
+        });
+
+        workoutForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
-            const age = document.getElementById('age').value;
             const goal = document.getElementById('goal').value;
             const experience = document.getElementById('experience').value;
             const days = document.getElementById('days').value;
-            const plan = document.getElementById('plan');
-            const workoutList = document.getElementById('workout-list');
-            const quote = document.getElementById('motivational-quote');
-            const profileName = document.getElementById('profile-name');
-            const profileAge = document.getElementById('profile-age');
-            const profileSection = document.querySelector('.profile');
-            const caloriesSection = document.querySelector('.calories');
             
             let workouts = [];
             let descriptions = {};
@@ -218,45 +326,46 @@
             plan.classList.remove('hidden');
             quote.textContent = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
             quote.classList.remove('hidden');
-            
-            profileName.textContent = `Name: ${name}`;
-            profileAge.textContent = `Age: ${age}`;
-            profileSection.classList.remove('hidden');
-            caloriesSection.classList.remove('hidden');
         });
 
-        document.getElementById('save-profile').addEventListener('click', function() {
-            const name = document.getElementById('name').value;
-            const age = document.getElementById('age').value;
-            localStorage.setItem('profileName', name);
-            localStorage.setItem('profileAge', age);
-            alert('Profile saved successfully!');
-        });
-
-        document.getElementById('add-calories').addEventListener('click', function() {
-            const calories = parseInt(document.getElementById('calories').value);
-            let totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
+        addCaloriesButton.addEventListener('click', () => {
+            const calories = parseInt(caloriesInput.value);
             totalCalories += calories;
             localStorage.setItem('totalCalories', totalCalories);
-            document.getElementById('total-calories').textContent = totalCalories;
+            updateCalories();
         });
 
-        window.addEventListener('load', function() {
-            const name = localStorage.getItem('profileName');
-            const age = localStorage.getItem('profileAge');
-            const totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
-
-            if (name && age) {
-                document.getElementById('name').value = name;
-                document.getElementById('age').value = age;
-                document.getElementById('profile-name').textContent = `Name: ${name}`;
-                document.getElementById('profile-age').textContent = `Age: ${age}`;
-                document.querySelector('.profile').classList.remove('hidden');
-                document.querySelector('.calories').classList.remove('hidden');
+        // Progress Chart
+        const ctx = document.getElementById('progress-chart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Calories Burned',
+                    data: [0, 0, 0, 0],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-
-            document.getElementById('total-calories').textContent = totalCalories;
         });
+
+        function updateProgressChart() {
+            const data = progressChart.data.datasets[0].data;
+            const currentWeek = Math.floor((new Date().getDate() - 1) / 7);
+            data[currentWeek] = totalCalories;
+            progressChart.update();
+        }
+
+        addCaloriesButton.addEventListener('click', updateProgressChart);
     </script>
 </body>
 </html>

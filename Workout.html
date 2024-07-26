@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Workout Plan Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+        }
+        select, input {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #plan {
+            margin-top: 20px;
+        }
+        #plan.hidden {
+            display: none;
+        }
+        #workout-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .quote {
+            margin-top: 20px;
+            font-style: italic;
+            text-align: center;
+        }
+        .description {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advanced Workout Plan Generator</h1>
+        <form id="workout-form">
+            <label for="goal">Select Your Fitness Goal:</label>
+            <select id="goal" name="goal" required>
+                <option value="">--Please choose an option--</option>
+                <option value="weight_loss">Weight Loss</option>
+                <option value="muscle_gain">Muscle Gain</option>
+                <option value="endurance">Endurance</option>
+                <option value="flexibility">Flexibility</option>
+            </select>
+
+            <label for="experience">Select Your Experience Level:</label>
+            <select id="experience" name="experience" required>
+                <option value="">--Please choose an option--</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+            

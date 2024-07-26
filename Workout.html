@@ -298,16 +298,12 @@
         });
 
         logoutButton.addEventListener('click', () => {
-            userProfile = null;
-            localStorage.removeItem('userProfile');
-            localStorage.removeItem('customWorkouts');
-            loginSection.classList.remove('hidden');
-            profileSection.classList.add('hidden');
-            caloriesSection.classList.add('hidden');
-            progressSection.classList.add('hidden');
-            customWorkoutSection.classList.add('hidden');
-            socialSection.classList.add('hidden');
+    userProfile = null;
+    localStorage.removeItem('userProfile');
+    localStorage.removeItem('customWorkouts');
+    window.location.href = 'logout.html';
         });
+
 
         workoutForm.addEventListener('submit', (e) => {
             e.preventDefault();

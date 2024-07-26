@@ -19,7 +19,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 600px;
+            width: 500px;
+            max-width: 100%;
         }
         h1, h2 {
             text-align: center;
@@ -66,7 +67,7 @@
             font-size: 14px;
             color: #666;
         }
-        .profile, .calories, .progress, .login, .register {
+        .profile, .calories, .progress, .login, .register, .custom-workout, .social {
             margin-top: 20px;
             padding: 10px;
             background-color: #f9f9f9;
@@ -76,9 +77,15 @@
             width: 50px;
             text-align: center;
         }
-        .progress-chart {
+        .progress-chart, .custom-chart {
             width: 100%;
             height: 0px;
+        }
+        .social {
+            text-align: center;
+        }
+        .social button {
+            margin: 5px;
         }
     </style>
 </head>
@@ -116,6 +123,7 @@
             <h1>Welcome, <span id="profile-name"></span></h1>
             <p>Age: <span id="profile-age"></span></p>
             <button id="logout">Logout</button>
+            
             <form id="workout-form">
                 <h2>Create Your Workout Plan</h2>
                 <label for="goal">Select Your Fitness Goal:</label>
@@ -160,6 +168,27 @@
                 <h3>Progress</h3>
                 <div id="progress-chart" class="progress-chart"></div>
             </div>
+
+            <div class="custom-workout hidden">
+                <h3>Create Custom Workout</h3>
+                <label for="custom-exercise">Select Exercise:</label>
+                <select id="custom-exercise">
+                    <option value="">--Select an exercise--</option>
+                    <option value="pushups">Pushups</option>
+                    <option value="squats">Squats</option>
+                    <option value="burpees">Burpees</option>
+                </select>
+                <label for="custom-reps">Repetitions:</label>
+                <input type="number" id="custom-reps" name="reps" min="1">
+                <button id="add-custom-workout">Add Exercise</button>
+                <ul id="custom-workout-list"></ul>
+            </div>
+
+            <div class="social hidden">
+                <h3>Social Features</h3>
+                <button id="challenge-friends">Challenge Friends</button>
+                <button id="view-leaderboard">View Leaderboard</button>
+            </div>
         </div>
     </div>
 
@@ -178,15 +207,24 @@
         const profileAge = document.getElementById('profile-age');
         const caloriesSection = document.querySelector('.calories');
         const progressSection = document.querySelector('.progress');
+        const customWorkoutSection = document.querySelector('.custom-workout');
+        const socialSection = document.querySelector('.social');
         const showRegisterLink = document.getElementById('show-register');
         const showLoginLink = document.getElementById('show-login');
         const logoutButton = document.getElementById('logout');
         const caloriesInput = document.getElementById('calories');
         const addCaloriesButton = document.getElementById('add-calories');
         const totalCaloriesElement = document.getElementById('total-calories');
+        const customExerciseSelect = document.getElementById('custom-exercise');
+        const customRepsInput = document.getElementById('custom-reps');
+        const addCustomWorkoutButton = document.getElementById('add-custom-workout');
+        const customWorkoutList = document.getElementById('custom-workout-list');
+        const challengeFriendsButton = document.getElementById('challenge-friends');
+        const viewLeaderboardButton = document.getElementById('view-leaderboard');
 
         let userProfile = JSON.parse(localStorage.getItem('userProfile')) || null;
         let totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
+        let customWorkouts = JSON.parse(localStorage.getItem('customWorkouts')) || [];
 
         function displayProfile() {
             profileName.textContent = userProfile.name;
@@ -196,15 +234,27 @@
             registerSection.classList.add('hidden');
             caloriesSection.classList.remove('hidden');
             progressSection.classList.remove('hidden');
+            customWorkoutSection.classList.remove('hidden');
+            socialSection.classList.remove('hidden');
         }
 
         function updateCalories() {
             totalCaloriesElement.textContent = totalCalories;
         }
 
+        function renderCustomWorkouts() {
+            customWorkoutList.innerHTML = '';
+            customWorkouts.forEach((workout, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${workout.exercise} - ${workout.reps} reps`;
+                customWorkoutList.appendChild(listItem);
+            });
+        }
+
         if (userProfile) {
             displayProfile();
             updateCalories();
+            renderCustomWorkouts();
         }
 
         showRegisterLink.addEventListener('click', () => {
@@ -250,10 +300,13 @@
         logoutButton.addEventListener('click', () => {
             userProfile = null;
             localStorage.removeItem('userProfile');
+            localStorage.removeItem('customWorkouts');
             loginSection.classList.remove('hidden');
             profileSection.classList.add('hidden');
             caloriesSection.classList.add('hidden');
             progressSection.classList.add('hidden');
+            customWorkoutSection.classList.add('hidden');
+            socialSection.classList.add('hidden');
         });
 
         workoutForm.addEventListener('submit', (e) => {
@@ -336,8 +389,8 @@
         });
 
         // Progress Chart
-        const ctx = document.getElementById('progress-chart').getContext('2d');
-        const progressChart = new Chart(ctx, {
+        const progressCtx = document.getElementById('progress-chart').getContext('2d');
+        const progressChart = new Chart(progressCtx, {
             type: 'line',
             data: {
                 labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
@@ -366,6 +419,27 @@
         }
 
         addCaloriesButton.addEventListener('click', updateProgressChart);
+
+        // Custom Workout
+        addCustomWorkoutButton.addEventListener('click', () => {
+            const exercise = customExerciseSelect.value;
+            const reps = customRepsInput.value;
+            if (exercise && reps) {
+                const workout = { exercise: exercise, reps: reps };
+                customWorkouts.push(workout);
+                localStorage.setItem('customWorkouts', JSON.stringify(customWorkouts));
+                renderCustomWorkouts();
+            }
+        });
+
+        // Social Features (mock-up)
+        challengeFriendsButton.addEventListener('click', () => {
+            alert('Challenge friends feature is not implemented yet.');
+        });
+
+        viewLeaderboardButton.addEventListener('click', () => {
+            alert('Leaderboard feature is not implemented yet.');
+        });
     </script>
 </body>
 </html>
